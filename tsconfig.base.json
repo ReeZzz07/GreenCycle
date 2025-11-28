@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["packages/shared/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build"]
+}
+

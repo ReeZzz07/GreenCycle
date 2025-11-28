@@ -1,0 +1,28 @@
+{
+  "name": "GreenCycle - Система учёта декоративных растений",
+  "short_name": "GreenCycle",
+  "description": "Система полного учёта закупок, продаж, выкупа и финансов для бизнеса по продаже декоративных растений",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2e7d32",
+  "orientation": "portrait-primary",
+  "icons": [],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Дашборд",
+      "short_name": "Дашборд",
+      "description": "Открыть главную страницу",
+      "url": "/"
+    },
+    {
+      "name": "Продажи",
+      "short_name": "Продажи",
+      "description": "Создать новую продажу",
+      "url": "/sales"
+    }
+  ]
+}
+
