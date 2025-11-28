@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
+    "rootDir": "./src",
     "declaration": true,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
@@ -12,8 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "scripts"],
-  "exclude": ["node_modules", "dist", "test"],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "test", "scripts"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",
