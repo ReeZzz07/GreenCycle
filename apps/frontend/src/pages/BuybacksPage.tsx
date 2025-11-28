@@ -35,6 +35,7 @@ import { buybacksService } from '../services/buybacks.service';
 import { salesService } from '../services/sales.service';
 import { clientsService } from '../services/clients.service';
 import {
+  Buyback,
   BuybackStatus,
   CreateBuybackDto,
   CreateBuybackItemDto,

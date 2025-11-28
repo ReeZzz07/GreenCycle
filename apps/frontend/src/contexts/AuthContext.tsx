@@ -21,18 +21,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: currentUser, isLoading: isLoadingUser } = useQuery({
+  const { data: currentUser, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ['user', 'me'],
     queryFn: () => usersService.getCurrentUser(),
     enabled: isAuthenticated,
     retry: false,
     throwOnError: false,
-    onError: (error: any) => {
-      // Игнорируем 401 ошибки - это нормально, если пользователь не авторизован
-      if (error?.response?.status !== 401) {
-        console.error('Ошибка при получении данных пользователя:', error);
-      }
-    },
   });
 
   useEffect(() => {
@@ -42,6 +36,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
     }
   }, [currentUser, isAuthenticated]);
+
+  useEffect(() => {
+    // Игнорируем 401 ошибки - это нормально, если пользователь не авторизован
+    if (userError && (userError as any)?.response?.status !== 401) {
+      console.error('Ошибка при получении данных пользователя:', userError);
+    }
+  }, [userError]);
 
   const login = async (email: string, password: string) => {
     await loginFn({ email, password });

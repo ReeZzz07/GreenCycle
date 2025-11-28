@@ -116,6 +116,7 @@ export interface CreateTransactionDto {
 }
 
 export interface CreatePartnerWithdrawalDto {
+  userId?: number;
   type: 'cash' | 'goods';
   amountOrQuantity: string;
   costValue?: string;

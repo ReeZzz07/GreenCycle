@@ -238,7 +238,7 @@ export function ClientsPage() {
       fullName: client.fullName,
       phone: client.phone || '',
       email: client.email || '',
-      addressFull: client.addressFull,
+      addressFull: client.addressFull || undefined,
       clientType: client.clientType,
       legalEntityName: client.legalEntityName || '',
       inn: client.inn || '',

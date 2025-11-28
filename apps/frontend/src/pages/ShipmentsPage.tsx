@@ -303,7 +303,7 @@ export function ShipmentsPage() {
         const attachment = await shipmentsService.uploadDocument(file);
         uploaded.push(attachment);
       }
-      form.setFieldValue('documents', [...form.values.documents, ...uploaded]);
+      form.setFieldValue('documents', [...(form.values.documents || []), ...uploaded]);
       notifications.show({
         title: 'Файлы загружены',
         message: 'Документы добавлены к поставке',
@@ -321,7 +321,8 @@ export function ShipmentsPage() {
   };
 
   const removeDocument = async (index: number) => {
-    const target = form.values.documents[index];
+    const documents = form.values.documents || [];
+    const target = documents[index];
     if (!target) {
       return;
     }
@@ -332,7 +333,7 @@ export function ShipmentsPage() {
         // ignore cleanup errors
       }
     }
-    const updated = [...form.values.documents];
+    const updated = [...documents];
     updated.splice(index, 1);
     form.setFieldValue('documents', updated);
   };
@@ -347,8 +348,9 @@ export function ShipmentsPage() {
   };
 
   const closeShipmentModal = async (cleanup = true) => {
-    if (cleanup && form.values.documents.length > 0) {
-      await cleanupTemporaryDocuments(form.values.documents);
+    const documents = form.values.documents || [];
+    if (cleanup && documents.length > 0) {
+      await cleanupTemporaryDocuments(documents);
     }
     setOpened(false);
     setEditingShipment(null);
@@ -362,8 +364,8 @@ export function ShipmentsPage() {
       sizeCmMin: batch.sizeCmMin,
       sizeCmMax: batch.sizeCmMax,
       potType: batch.potType,
-      quantity: batch.quantityInitial,
-      pricePerUnit: Number(batch.purchasePricePerUnit),
+      quantityInitial: batch.quantityInitial,
+      purchasePricePerUnit: Number(batch.purchasePricePerUnit),
     }));
 
     const documentsPayload = values.documents?.map((doc) => ({
@@ -730,9 +732,9 @@ export function ShipmentsPage() {
                   Поддерживаются файлы PDF, DOC, DOCX и изображения (фото/сканы). Можно выбрать
                   несколько файлов одновременно. После загрузки документы появятся в списке ниже.
                 </Text>
-                {form.values.documents.length > 0 && (
+                {(form.values.documents || []).length > 0 && (
                   <Group gap="sm">
-                    {form.values.documents.map((doc, index) => (
+                    {(form.values.documents || []).map((doc, index) => (
                       <Paper
                         key={`${doc.url}-${index}`}
                         withBorder

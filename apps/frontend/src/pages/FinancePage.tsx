@@ -167,6 +167,8 @@ export function FinancePage() {
     },
   });
 
+  const [withdrawalUserId, setWithdrawalUserId] = useState<number>(0);
+
   const withdrawalForm = useForm<CreatePartnerWithdrawalDto>({
     initialValues: {
       type: 'cash',
@@ -174,7 +176,6 @@ export function FinancePage() {
       costValue: '',
       reason: '',
       accountId: 0,
-      userId: 0,
       withdrawalDate: '',
       shipmentId: 0,
     },
@@ -186,7 +187,6 @@ export function FinancePage() {
         values.type === 'cash' && (!value || value === 0)
           ? 'Выберите счёт'
           : null,
-      userId: (value) => (!value || value === 0 ? 'Выберите пользователя' : null),
       shipmentId: (value, values) =>
         values.type === 'goods' && (!value || value === 0)
           ? 'Выберите поставку'
@@ -291,13 +291,11 @@ export function FinancePage() {
   });
 
   const createWithdrawalMutation = useMutation({
-    mutationFn: (dto: CreatePartnerWithdrawalDto) => {
+    mutationFn: (dto: CreatePartnerWithdrawalDto & { userId?: number }) => {
       // Преобразуем данные для отправки на бэкенд
-      const payload: CreatePartnerWithdrawalDto = {
+      const payload: any = {
         type: dto.type,
-        amountOrQuantity: typeof dto.amountOrQuantity === 'string' 
-          ? parseFloat(dto.amountOrQuantity) || 0 
-          : dto.amountOrQuantity,
+        amountOrQuantity: parseFloat(dto.amountOrQuantity) || 0,
         reason: dto.reason,
       };
 
@@ -313,9 +311,7 @@ export function FinancePage() {
 
       // Добавляем costValue только если он указан
       if (dto.costValue !== undefined && dto.costValue !== '' && dto.costValue !== null) {
-        payload.costValue = typeof dto.costValue === 'string' 
-          ? parseFloat(dto.costValue) || undefined 
-          : dto.costValue;
+        payload.costValue = parseFloat(dto.costValue) || undefined;
       }
 
       // Добавляем shipmentId только если он указан и больше 0
@@ -1368,6 +1364,7 @@ export function FinancePage() {
           opened={cashWithdrawalModalOpened}
           onClose={() => {
             setCashWithdrawalModalOpened(false);
+            setWithdrawalUserId(0);
             withdrawalForm.reset();
           }}
           title="Создать изъятие средств"
@@ -1376,7 +1373,7 @@ export function FinancePage() {
         >
           <form
             onSubmit={withdrawalForm.onSubmit((values) => {
-              createWithdrawalMutation.mutate({ ...values, type: 'cash' });
+              createWithdrawalMutation.mutate({ ...values, type: 'cash', userId: withdrawalUserId });
             })}
           >
             <Stack>
@@ -1386,11 +1383,10 @@ export function FinancePage() {
                 data={superAdminOptions}
                 searchable
                 placeholder="Выберите супер-администратора"
-                value={withdrawalForm.values.userId?.toString() || ''}
+                value={withdrawalUserId?.toString() || ''}
                 onChange={(value) =>
-                  withdrawalForm.setFieldValue('userId', value ? parseInt(value) : 0)
+                  setWithdrawalUserId(value ? parseInt(value) : 0)
                 }
-                error={withdrawalForm.errors.userId}
               />
               <Select
                 label="Счёт"
@@ -1445,6 +1441,7 @@ export function FinancePage() {
           opened={goodsWithdrawalModalOpened}
           onClose={() => {
             setGoodsWithdrawalModalOpened(false);
+            setWithdrawalUserId(0);
             withdrawalForm.reset();
           }}
           title="Создать изъятие товара"
@@ -1453,7 +1450,7 @@ export function FinancePage() {
         >
           <form
             onSubmit={withdrawalForm.onSubmit((values) => {
-              createWithdrawalMutation.mutate({ ...values, type: 'goods' });
+              createWithdrawalMutation.mutate({ ...values, type: 'goods', userId: withdrawalUserId });
             })}
           >
             <Stack>
@@ -1463,11 +1460,10 @@ export function FinancePage() {
                 data={superAdminOptions}
                 searchable
                 placeholder="Выберите супер-администратора"
-                value={withdrawalForm.values.userId?.toString() || ''}
+                value={withdrawalUserId?.toString() || ''}
                 onChange={(value) =>
-                  withdrawalForm.setFieldValue('userId', value ? parseInt(value) : 0)
+                  setWithdrawalUserId(value ? parseInt(value) : 0)
                 }
-                error={withdrawalForm.errors.userId}
               />
               <Select
                 label="Поставка"
@@ -1734,7 +1730,7 @@ export function FinancePage() {
                             <Text fw={600} mb="xs" size="sm">
                               Товары в продаже:
                             </Text>
-                            <Table size="sm">
+                            <Table>
                               <Table.Thead>
                                 <Table.Tr>
                                   <Table.Th>Партия</Table.Th>
