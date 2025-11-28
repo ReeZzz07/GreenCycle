@@ -40,8 +40,8 @@ import { CommonModule } from '../common/common.module';
       useFactory: (configService: ConfigService<AppConfig>) => ({
         throttlers: [
           {
-            ttl: configService.get('throttler.ttl', { infer: true }) * 1000, // в миллисекундах
-            limit: configService.get('throttler.limit', { infer: true }),
+            ttl: (configService.get('throttler.ttl', { infer: true }) ?? 60) * 1000, // в миллисекундах
+            limit: configService.get('throttler.limit', { infer: true }) ?? 100,
           },
         ],
       }),
@@ -89,7 +89,7 @@ import { CommonModule } from '../common/common.module';
             autoLogging: {
               ignore: (req) => {
                 // Игнорируем запросы к статическим файлам и документации
-                return req.url?.startsWith('/uploads') || req.url?.startsWith('/api/docs');
+                return !!(req.url?.startsWith('/uploads') || req.url?.startsWith('/api/docs'));
               },
             },
           },

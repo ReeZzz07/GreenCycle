@@ -13,11 +13,11 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { diskStorage } = require('multer');
 import { basename, join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { Response } from 'express';
-import type { Express } from 'express';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
@@ -63,7 +63,7 @@ const sanitizeFilename = (name: string): string => {
 };
 
 const documentStorage = diskStorage({
-  destination: (_req, _file, cb) => {
+  destination: (_req: any, _file: any, cb: (error: Error | null, destination: string) => void) => {
     ensureDocumentsDir();
     const uniqueDir = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const targetDir = join(DOCUMENTS_DIR, uniqueDir);
@@ -72,7 +72,7 @@ const documentStorage = diskStorage({
     }
     cb(null, targetDir);
   },
-  filename: (_req, file, cb) => {
+  filename: (_req: any, file: any, cb: (error: Error | null, filename: string) => void) => {
     const decodedName = decodeOriginalName(file.originalname);
     const safeName = sanitizeFilename(basename(decodedName));
     (file as any).decodedOriginalName = decodedName;
@@ -80,7 +80,7 @@ const documentStorage = diskStorage({
   },
 });
 
-const documentFileFilter = (_req: any, file: Express.Multer.File, cb: any) => {
+const documentFileFilter = (_req: any, file: any, cb: any) => {
   if (!DOCUMENT_ALLOWED_MIME_TYPES.includes(file.mimetype)) {
     cb(new BadRequestException('Недопустимый формат файла'), false);
     return;
@@ -118,7 +118,7 @@ export class ShipmentsController {
       limits: { fileSize: DOCUMENT_MAX_SIZE },
     }),
   )
-  async uploadDocument(@UploadedFile() file: Express.Multer.File) {
+  async uploadDocument(@UploadedFile() file: any) {
     if (!file) {
       throw new BadRequestException('Файл не загружен');
     }

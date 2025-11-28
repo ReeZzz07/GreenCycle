@@ -473,7 +473,7 @@ export class SalesService {
       return {
         ...saleWithRelations,
         transaction: transaction || null,
-      };
+      } as Sale & { transaction?: Transaction | null };
     });
   }
 

@@ -260,7 +260,7 @@ export class ShipmentsService {
       let newTotalCost = parseFloat(shipment.totalCost);
       const hasBatchesToUpdate = dto.batches !== undefined && dto.batches !== null && Array.isArray(dto.batches) && dto.batches.length > 0;
       
-      if (hasBatchesToUpdate) {
+      if (hasBatchesToUpdate && dto.batches) {
         newTotalCost = dto.batches.reduce((acc, batchDto) => {
           return acc + batchDto.pricePerUnit * batchDto.quantity;
         }, 0);
@@ -357,7 +357,7 @@ export class ShipmentsService {
         // Создаем новые партии
         // totalCost уже пересчитан выше
 
-        const batches = dto.batches.map((batchDto) => {
+        const batches = (dto.batches || []).map((batchDto) => {
           const newBatch = manager.create(Batch, {
             shipment,
             plantType: batchDto.plantType.trim(),

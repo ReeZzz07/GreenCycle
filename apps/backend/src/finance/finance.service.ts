@@ -640,8 +640,8 @@ export class FinanceService {
               }
             }
           }
-        } catch (error) {
-          this.logger.error(`Ошибка при обработке изъятия товара: ${error.message}`, error.stack);
+        } catch (error: any) {
+          this.logger.error(`Ошибка при обработке изъятия товара: ${error?.message || String(error)}`, error?.stack);
           throw error;
         }
       }

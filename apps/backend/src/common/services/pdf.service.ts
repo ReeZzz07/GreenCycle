@@ -175,7 +175,6 @@ export class PdfService {
       defaultStyle: {
         font: 'Roboto',
         fontSize: 10,
-        encoding: 'UTF-8',
       },
     };
 
@@ -262,7 +261,6 @@ export class PdfService {
       defaultStyle: {
         font: 'Roboto',
         fontSize: 10,
-        encoding: 'UTF-8',
       },
     };
 
@@ -381,7 +379,6 @@ export class PdfService {
       defaultStyle: {
         font: 'Roboto',
         fontSize: 10,
-        encoding: 'UTF-8',
       },
     };
 

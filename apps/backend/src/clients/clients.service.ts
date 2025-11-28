@@ -47,7 +47,7 @@ export class ClientsService {
   private async invalidateClientsCache(): Promise<void> {
     // Удаляем все ключи кэша, связанные с клиентами
     try {
-      const store = this.cacheManager.store as any;
+      const store = (this.cacheManager as any).store;
       if (store && typeof store.keys === 'function') {
         const keys = await store.keys('clients:*');
         if (Array.isArray(keys)) {
@@ -283,7 +283,7 @@ export class ClientsService {
     }
   }
 
-  async importFromExcel(file: Express.Multer.File): Promise<{
+  async importFromExcel(file: any): Promise<{
     success: number;
     failed: Array<{ row: number; error: string; data: Record<string, unknown> }>;
     total: number;

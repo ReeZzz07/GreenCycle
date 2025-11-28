@@ -19,7 +19,8 @@ import { BulkDeleteDto } from './dto/bulk-delete.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtUser } from '../common/interfaces/jwt-user.interface';
-import { memoryStorage } from 'multer';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { memoryStorage } = require('multer');
 
 @Controller('clients')
 export class ClientsController {
@@ -111,7 +112,7 @@ export class ClientsController {
       },
     }),
   )
-  async importFromExcel(@UploadedFile() file: Express.Multer.File) {
+  async importFromExcel(@UploadedFile() file: any) {
     const result = await this.clientsService.importFromExcel(file);
     return {
       data: {

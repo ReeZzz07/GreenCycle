@@ -14,6 +14,7 @@ import {
 import { Response } from 'express';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
+import { SaleStatus } from './entities/sale.entity';
 import { Roles } from '../common/decorators/roles.decorator';
 import { PdfService } from '../common/services/pdf.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -77,7 +78,7 @@ export class SalesController {
     }
     const sale = await this.salesService.updateStatus(
       id,
-      status as 'completed' | 'cancelled',
+      status as SaleStatus,
       user.id,
     );
     return { data: sale };
